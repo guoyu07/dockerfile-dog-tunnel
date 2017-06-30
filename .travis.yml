@@ -1,0 +1,18 @@
+services:
+  - docker
+
+install: true
+
+before_script:
+  - FILE=$(wget -nv --content-disposition http://dog-tunnel.tk/download/linux64 2>&1 | grep -oP '(?<=").+(?=")')
+  - VER=$(echo $FILE | grep -oP '\d[\d.]+\d')
+  - tar -xzf "$FILE"
+
+  - docker login -u=jat001 -p="$DOCKER_PASSWD"
+
+script:
+  - docker build -t jat001/dog-tunnel:$VER --build-arg "VER=$VER" .
+  - docker tag jat001/dog-tunnel:$VER jat001/dog-tunnel:latest
+
+  - docker push jat001/dog-tunnel:$VER
+  - docker push jat001/dog-tunnel:latest
