@@ -10,7 +10,7 @@ before_script:
   - FILE=$(wget -nv --content-disposition http://dog-tunnel.tk/download/linux64 2>&1 | grep -oP '(?<=").+(?=")')
   - VER=$(echo "$FILE" | grep -oP '\d[\d.]+\d')
 
-  - docker pull "$NAME:$VER" && travis_terminate 0
+  - curl -f "https://index.docker.io/v1/repositories/$NAME/tags/$VER" && travis_terminate 0
   - tar -xzf "$FILE"
 
   - docker login -u=jat001 -p="$DOCKER_PASSWD"
